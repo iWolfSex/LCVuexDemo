@@ -16,7 +16,6 @@
 </template>
 
 <script>
-import pubsub from "pubsub-js";
 import MyHeader from "./components/MyHeader.vue";
 import MyFooter from "./components/MyFooter.vue";
 import MyList from "./components/MyList.vue";
@@ -47,8 +46,7 @@ export default {
       });
     },
     //删除一个todo
-    deleteTodo(_, id) {
-      console.log('删除吗')
+    deleteTodo(id) {
       this.todos = this.todos.filter((todo) => {
         return todo.id !== id;
       });
@@ -68,14 +66,6 @@ export default {
       });
       console.log(this.todos);
     },
-    //编辑
-    updateTodo(id,title) {
-      // eslint-disable-next-line no-debugger
-      debugger
-      this.todos.forEach((todo) => {
-        if(todo.id === id) todo.title =title
-      });
-    },
   },
   watch: {
     // todos(value){
@@ -91,13 +81,11 @@ export default {
   },
   mounted() {
     this.$bus.$on("checkeTodo", this.checkeTodo);
-    this.$bus.$on("updateTodo", this.updateTodo);
-    this.pubId = pubsub.subscribe("deleteTodo", this.deleteTodo);
+    this.$bus.$on("deleteTodo", this.deleteTodo);
   },
   beforeDestroy() {
     this.$bus.$off("checkeTodo");
-    this.$bus.$off("updateTodo");
-    pubsub.unsubscribe(this.pubId);
+    this.$bus.$off("deleteTodo");
   },
 };
 </script>
@@ -119,18 +107,12 @@ body {
     0 1px 2px rgba(0, 0, 0, 0.05);
   border-radius: 4px;
 }
-.btn-danger {
+.btn-daner {
   color: #fff;
   background-color: #da4f49;
   border: 1px solid #bd362f;
 }
-.btn-edit{
-  color: #fff;
-  background-color: skyblue;
-  border: 1px solid skyblue;
-  margin-right: 5px;
-}
-.btn-danger:hover {
+.btn-daner:hover {
   color: #fff;
   background-color: #bd362f;
 }

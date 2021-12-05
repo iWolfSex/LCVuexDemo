@@ -6,22 +6,14 @@
         :checked="todo.done"
         @change="handleCheck(todo.id)"
       />
-      <span v-show="!todo.isEdit">{{ todo.title }}</span>
-      <input
-        v-show="todo.isEdit"
-        type="text"
-        :value="todo.title"
-        @blur="handleBlur(todo,$event)"
-        ref="inputTitle"
-      />
+      <span>{{ todo.title }}</span>
     </label>
     <button class="btn btn-danger" @click="handleDelete(todo.id)">删除</button>
-    <button v-show="!todo.isEdit" class="btn btn-edit" @click="handleEdit(todo)">编辑</button>
   </li>
 </template> 
 
 <script>
-import pubsub from "pubsub-js";
+import pubsub from 'pubsub-js'
 export default {
   name: "MyItem",
   //声明接收todo对象
@@ -31,32 +23,14 @@ export default {
     handleCheck(id) {
       console.log(id);
       //通知App组件将对应的todo对象的done值取反
-      this.$bus.$emit("checkeTodo", id);
+      this.$bus.$emit('checkeTodo',id)
     },
     //删除
     handleDelete(id) {
-      if (confirm("确定删除吗")) {
-        console.log(id);
-        pubsub.publish("deleteTodo", id);
-      }
-    },
-    //编辑
-    handleEdit(todo) {
-      if (todo.hasOwnProperty.call("isEdit")) {
-        todo.isEdit = true;
-      } else {
-        this.$set(todo, "isEdit", true);
-      }
-      this.$nextTick(function(){
-        this.$refs.inputTitle.focus()
-      })
-    },
-    //失去焦点回调（真正修改）
-    handleBlur(todo,e) {
-      console.log('学习')
-      todo.isEdit = false;
-      if(!e.target.value.trim()) return alert('输入不能为空')
-      this.$bus.$emit('updateTodo',todo.id,e.target.value)
+        if(confirm('确定删除吗')){
+            console.log(id)
+            pubsub.publish('deleteTodo',id)
+        }
     },
   },
 };
